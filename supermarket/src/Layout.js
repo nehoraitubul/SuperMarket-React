@@ -61,14 +61,26 @@ export function Layout(){
                 </Container>
             </AppBar>
 
-            <AppBar position="static" sx={{ backgroundColor: '#ffffff', color: '#555'}} elevation={0}>
-            <div style={{ overflowX: "scroll", maxHeight: "200px"}} ref={scrollRef} className="container"
+            {/* Desktop Display */}
+            <AppBar position="static" sx={{ backgroundColor: '#f3f3f3', color: '#555', pr: '60px', pl: '60px', display: { xs: 'none', md: 'flex' }}} elevation={0}>
+            <div style={{ minHeight: "80px", paddingBottom: '10px'}} ref={scrollRef} className="container"
                 id="container" onWheel={onWheel}>
                 <Stack direction="row" spacing={2}>
                     <CategoryBar />
                 </Stack>
             </div>
             </AppBar>
+
+            {/* Phone Display */}
+            <AppBar position="static" sx={{backgroundColor: '#f3f3f3', color: '#555', display: { xs: 'flex', md: 'none' }}} elevation={0}>
+            <div style={{ minHeight: "80px", paddingBottom: '10px'}} ref={scrollRef} className="container"
+                id="container" onTouchMove={onWheel} onWheel={onWheel}>
+                <Stack direction="row" spacing={2}>
+                    <CategoryBar />
+                </Stack>
+            </div>
+            </AppBar>
+
             
             <AppBar position="static" sx={{ backgroundColor: '#f3f3f3', color: '#555'}} elevation={0}>
                 <p>fd</p>
