@@ -1,25 +1,44 @@
+import axios from "axios"
+import "./Layout.css"
 import { AppBar, Toolbar, Typography, IconButton, Grid, Box, Button, Container, Menu, MenuItem, TextField, Fab, Badge, Stack } from '@mui/material';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { SearchDropDown } from './Menu/SearchDropDown';
 import { Link } from 'react-router-dom';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { CategoryBar } from './Menu/CategoryBar';
-import "./Layout.css"
+import { CATEGORIES } from "./URLS"
+import { CATEGORIES_ACTIONS, useCategories, useCategoriesDispatch } from "./AppContext";
 
 export function Layout(){
 
+    const categoriesState = useCategories()
+    const dispatch = useCategoriesDispatch()
 
-    // const [anchorEl, setAnchorEl] = useState(null);
-    // const open = Boolean(anchorEl);
-    // const handleClick = (event) => {
-    //     setAnchorEl(event.currentTarget);
-    // };
-    // const handleClose = () => {
-    //     setAnchorEl(null);
-    // };
+
+    const getCategories = async () => {
+        dispatch({type: CATEGORIES_ACTIONS.CATEGORIES_FETCH_START})
+        const response = await axios.get(CATEGORIES)
+        if(response.status === 200){
+            const allCategories = response.data
+            console.log("allCategories", allCategories);
+            dispatch({
+				type: CATEGORIES_ACTIONS.CATEGORIES_FETCH_SUCCESS,
+				dataRecieved: allCategories
+			})
+        } else {
+            dispatch({ type: CATEGORIES_ACTIONS.CATEGORIES_FETCH_ERROR, msg: response.statusText})
+        }
+    };
+
+    useEffect(() => {
+        getCategories()
+    }, []);
+
+
+
+
 
     const onWheel = e => {
-        e.preventDefault();
         const container = document.getElementById("container");
         const containerScrollPosition = document.getElementById("container").scrollLeft;
         container.scrollTo({
@@ -32,6 +51,8 @@ export function Layout(){
 
     return(
         <Box>
+            {categoriesState.categories!==null &&
+            console.log("Categories:", categoriesState.categories[2])}
             <AppBar position="static" sx={{ backgroundColor: '#f3f3f3', color: '#555', pt: '9px', pb: '9px'}} elevation={0}>
                 <Container maxWidth="lg" >
                     <Toolbar disableGutters>

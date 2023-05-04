@@ -1,31 +1,6 @@
 import { createContext, useContext, useReducer } from "react"
 
-export const themes = {
-    light: {
-      foreground: '#000000',
-      background: '#eeeeee',
-    },
-    dark: {
-      foreground: '#ffffff',
-      background: '#222222',
-    },
-  };
-
-  const PARTIAL_SEARCH = {
-    selectedCategoryId: null
-  };
-
-  function reducer(state, action) {
-    switch (action.type) {
-      case 'SET_SELECTED_CATEGORY':
-        return {
-          selectedCategoryId: action.payload
-        };
-      default:
-        return state;
-    }
-  }
-
+// SEARCH
 
 const SEARCH_ARGS = {
   category: "הכול",
@@ -72,7 +47,6 @@ function searchReducer(searchState, action) {
     }
 
     case SEARCH_ACTIONS.SELECT_CAREGORY: {
-      console.log("SELECT_CAREGORY")
       return {
         ...searchState,
         loading: false,
@@ -91,7 +65,6 @@ function searchReducer(searchState, action) {
     }
 
     case SEARCH_ACTIONS.CLEAR_CATEGORY: {
-      console.log("CLEAR_CATEGORY")
       return {
         ...searchState,
         category: "הכול"
@@ -119,7 +92,69 @@ export function useSearchDispatch() {
   
 
 
-const SettingsThemeContext = createContext(themes.dark)
+// CATEGORIES
+const CATEGORIES_ARGS = {
+  categories: null,
+  loading: false,
+  errorMsg: null,
+}
+
+export const CATEGORIES_ACTIONS = {
+  CATEGORIES_FETCH_START: "categoriesFetchStart",
+  CATEGORIES_FETCH_SUCCESS: "categoriesFetchSuccess",
+  CATEGORIES_FETCH_ERROR: "categoriesFetchError",
+}
+
+
+function categoriesReducer(categoriesState, action) {
+  switch(action.type) {
+
+    case CATEGORIES_ACTIONS.CATEGORIES_FETCH_START: {
+      return {
+        ...categoriesState,
+        loading: true,
+        errorMsg: null,
+      }
+    }
+
+    case CATEGORIES_ACTIONS.CATEGORIES_FETCH_SUCCESS: {
+      return {
+        ...categoriesState,
+        loading: false,
+        errorMsg: null,
+        categories: action.dataRecieved, // !
+      }
+    }
+
+    case CATEGORIES_ACTIONS.CATEGORIES_FETCH_ERROR: {
+      return {
+        ...categoriesState,
+        loading: false,
+        errorMsg: action.msg,
+      }
+    }
+
+    default: {
+      throw Error('Unknown action: ' + action.type)
+    }
+
+    
+  }}
+
+
+const CategoriesContext = createContext(CATEGORIES_ARGS)
+const CategoriesDispatchContext = createContext(null)
+
+export function useCategories() {
+  return useContext(CategoriesContext);
+}
+
+export function useCategoriesDispatch() {
+  return useContext(CategoriesDispatchContext);
+}
+
+
+
 
 export function AppProvider({ children }){
 
@@ -128,14 +163,28 @@ export function AppProvider({ children }){
     SEARCH_ARGS
   )
 
+  const [categoriesState, categoriesDispatch] = useReducer(
+    categoriesReducer,
+    CATEGORIES_ARGS
+  )
+
+  
+
 
   return(
-      // <SettingsThemeContext.Provider>
-      <SearchContext.Provider value={searchState}>
-        <SearchDispatchContext.Provider value={dispatch}>
-          {children}
-        </SearchDispatchContext.Provider>
-      </SearchContext.Provider>
-      // </SettingsThemeContext.Provider>
+    <CategoriesContext.Provider value={categoriesState}>
+      <CategoriesDispatchContext.Provider value={categoriesDispatch}>
+
+        <SearchContext.Provider value={searchState}>
+          <SearchDispatchContext.Provider value={dispatch}>
+
+            {children}
+
+          </SearchDispatchContext.Provider>
+        </SearchContext.Provider>
+
+      </CategoriesDispatchContext.Provider>
+    </CategoriesContext.Provider>
+
   )
 }
