@@ -1,11 +1,12 @@
 import axios from "axios"
 import { CATEGORIES } from "../URLS"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Link } from "react-router-dom";
-import { Box, Button, Fade, Icon, MenuItem, Popper, Tooltip } from "@mui/material";
+import { Box, Button, Fade, Icon, MenuItem, Popper, Tooltip, Typography, tooltipClasses } from "@mui/material";
 import { SEARCH_ACTIONS, useSearch, useSearchDispatch, useCategories } from "../AppContext";
 import FirstImg from "./milkImg.svg";
 import { CategoryExpand } from "./CategoryExpand";
+import { styled } from '@mui/material/styles';
 
 
 
@@ -13,29 +14,31 @@ export function CategoryBar() {
 
   const categoriesState = useCategories()
 
-  const [open, setOpen] = useState(false);
-  const [anchorEl, setAnchorEl] = useState(null);
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-    setOpen((previousOpen) => !previousOpen);
-  };
-
-  const canBeOpen = open && Boolean(anchorEl);
-  const id = canBeOpen ? 'transition-popper' : undefined;
-
+  const NoMaxWidthTooltip = styled(({ className, ...props }) => (
+    <Tooltip {...props} classes={{ popper: className }} />
+  ))({
+    [`& .${tooltipClasses.tooltip}`]: {
+      maxWidth: 'none',
+    },
+  });
+  
 
 
     {categoriesState.categories!==null &&
-      categoriesState.categories.map((category) => {console.log(category.category.name)} )}
+      categoriesState.categories.map((category) => {console.log(category)} )}
 
 
     return(
         <>
         {categoriesState.categories!==null ?
         categoriesState.categories.map((category) => 
+        <NoMaxWidthTooltip sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: '1000px' }} 
+        title={<div sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <CategoryExpand category={category}/>
+      </div>} 
+      TransitionComponent={Fade}
+        TransitionProps={{ timeout: 400 }}>
           <Button 
-          onClick={handleClick}
             sx={{
               minWidth: '150px',
               backgroundColor: '#fff',
@@ -49,20 +52,13 @@ export function CategoryBar() {
             <img src={FirstImg} alt="Milk" style={{ marginRight: "10px", height: "20px" }} />
             {category.category.name}
             </Button>
+            </NoMaxWidthTooltip>
 )
         :
         <p>Loading...</p>
         }
-        <Popper id={id} open={open} anchorEl={anchorEl} transition>
-        {({ TransitionProps }) => (
-          <Fade {...TransitionProps} timeout={350}>
-            <Box sx={{ border: 1, p: 1, bgcolor: 'background.paper' }}>
-              The content of the Popper.
-            </Box>
-          </Fade>
-        )}
-      </Popper>
-        
+
+
         </>
     )
 }
