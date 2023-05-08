@@ -1,29 +1,63 @@
-import { Box, Button, Fade, Popper } from "@mui/material";
+import { Box, Button, Fade, Grid, Popper, Typography, createMuiTheme } from "@mui/material";
 import { useEffect } from "react";
 import { useCategories } from "../AppContext";
-import { Link } from "react-router-dom";
+import { Link, NavLink, Outlet } from "react-router-dom";
+import { createTheme, ThemeProvider } from '@mui/material';
+
+const theme = createTheme({
+  typography: {
+    fontFamily: [
+      '"Segoe UI"',
+    ],
+  },
+});
 
 
 
 export function CategoryExpand({category}) {
 
-    // console.log('inside CategoryExpand ', category);
-    // let subCategory = category.sub_sub_categories
-    // console.log('try ', subCategory.sub_sub_sub_categories);
+    
     return (
-      <ul>
-      {category.sub_sub_categories.map((subCategory, index) => (
-        <li key={subCategory.id}>
-          <Link href="#">{subCategory.name}</Link>
-          <div style={{ display: "flex" }}>
+      <>
+      <Grid container direction="row" alignItems="flex-start" justifyContent="flex-end">
+      {category.sub_sub_categories.map((subCategory) => (
+        
+        <Grid item xs={category.sub_sub_categories.length === 1 ? 12 : category.sub_sub_categories.length <= 4 ? 6 : 4} 
+        >
+        <Box dir="rtl">
+        {/* {console.log('dffdf', category.sub_sub_categories)} */}
+
+
+          <ThemeProvider theme={theme}>
+          <NavLink to={`products/${subCategory.name.split(' ').join('-')}/`} key={subCategory.id} state={{data: {"sc3_id":subCategory.id}}}
+            style={{ fontSize: '25px' ,color: 'inherit', textDecoration: 'inherit'}} 
+            className='nav-link'>
+            <Typography color={'red'} fontSize='1rem' mt={1}>{subCategory.name}</Typography>
+          </NavLink>
+          </ThemeProvider>
+
+          <div style={{ display: "flex" , flexDirection: 'column'}}>
             {subCategory.sub_sub_sub_categories.map(subSubCategory => (
+
               <div key={subSubCategory.id} style={{ display: "inline-block", marginRight: "10px" }}>
-                <Link href="#">{subSubCategory.name}</Link>
+
+                <NavLink to={`products/${subSubCategory.name.split(' ').join('-')}/`} 
+                  state={{data: {"sc4_id":subSubCategory.id}}} key={subSubCategory.id}
+                  color='textPrimary' style={{ fontSize: '15px' ,color: 'inherit', textDecoration: 'inherit'}} className='nav-link'>
+                
+                <Typography color={'white'}>{subSubCategory.name}</Typography>
+                </NavLink>
               </div>
+
             ))}
           </div>
-        </li>
+        </Box>
+        </Grid>
       ))}
-    </ul>
+
+      
+      </Grid>
+
+    </>
     );
 }

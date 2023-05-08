@@ -2,7 +2,7 @@ import axios from "axios"
 import { CATEGORIES } from "../URLS"
 import { useEffect, useRef, useState } from "react"
 import { Link } from "react-router-dom";
-import { Box, Button, Fade, Icon, MenuItem, Popper, Tooltip, Typography, tooltipClasses } from "@mui/material";
+import { Box, Button, Fade, Icon, MenuItem, Popover, Popper, Tooltip, Typography, tooltipClasses } from "@mui/material";
 import { SEARCH_ACTIONS, useSearch, useSearchDispatch, useCategories } from "../AppContext";
 import FirstImg from "./milkImg.svg";
 import { CategoryExpand } from "./CategoryExpand";
@@ -18,7 +18,7 @@ export function CategoryBar() {
     <Tooltip {...props} classes={{ popper: className }} />
   ))({
     [`& .${tooltipClasses.tooltip}`]: {
-      maxWidth: 'none',
+      maxWidth: '800px',
     },
   });
   
@@ -32,13 +32,13 @@ export function CategoryBar() {
         <>
         {categoriesState.categories!==null ?
         categoriesState.categories.map((category) => 
-        <NoMaxWidthTooltip sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: '1000px' }} 
+        <NoMaxWidthTooltip arrow sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: '1000px' }} 
         title={<div sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <CategoryExpand category={category}/>
       </div>} 
       TransitionComponent={Fade}
         TransitionProps={{ timeout: 400 }}>
-          <Button 
+          <Button
             sx={{
               minWidth: '150px',
               backgroundColor: '#fff',
@@ -53,7 +53,7 @@ export function CategoryBar() {
             {category.category.name}
             </Button>
             </NoMaxWidthTooltip>
-)
+        )
         :
         <p>Loading...</p>
         }

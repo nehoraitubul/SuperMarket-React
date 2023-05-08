@@ -6,3 +6,5 @@ export const LOGIN = `${HOSTNAME}/auth/token/`
 export const REFRESH = `${HOSTNAME}/auth/token/refresh`
 
 export const CATEGORIES = `${HOSTNAME}/categories/`
+
+export const SEARCH_CATEGORIES = `${HOSTNAME}/search/category`

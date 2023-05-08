@@ -3,7 +3,7 @@ import "./Layout.css"
 import { AppBar, Toolbar, Typography, IconButton, Grid, Box, Button, Container, Menu, MenuItem, TextField, Fab, Badge, Stack } from '@mui/material';
 import { useRef, useState, useEffect } from 'react';
 import { SearchDropDown } from './Menu/SearchDropDown';
-import { Link } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { CategoryBar } from './Menu/CategoryBar';
 import { CATEGORIES } from "./URLS"
@@ -50,6 +50,7 @@ export function Layout(){
       const scrollRef = useRef(null);
 
     return(
+        <>
         <Box>
             {categoriesState.categories!==null &&
             console.log("Categories:", categoriesState.categories[2])}
@@ -106,6 +107,17 @@ export function Layout(){
             <AppBar position="static" sx={{ backgroundColor: '#f3f3f3', color: '#555'}} elevation={0}>
                 <p>fd</p>
             </AppBar>
+
+            
         </Box>
+
+        
+        <div dir='rtl'>
+
+        <Outlet />
+
+        </div>
+
+        </>
     )
 }
