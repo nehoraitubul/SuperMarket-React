@@ -142,8 +142,10 @@ function categoriesReducer(categoriesState, action) {
   }}
 
 
+
 const CategoriesContext = createContext(CATEGORIES_ARGS)
 const CategoriesDispatchContext = createContext(null)
+
 
 export function useCategories() {
   return useContext(CategoriesContext);
@@ -154,6 +156,96 @@ export function useCategoriesDispatch() {
 }
 
 
+
+
+ // CART
+
+ const CART_ARGS = {
+  products: {},
+  loading: false,
+  errorMsg: null,
+  empty: true,
+}
+
+export const CART_ACTIONS = {
+  CART_ADD_TO_CART: "cartAddToCart",
+  CART_REDUCE_QTY: "cartReduceQty",
+  CART_ADD_QTY: "cartAddQty",
+}
+
+
+function cartReducer(cartState, action) {
+  switch(action.type) {
+
+    case CART_ACTIONS.CART_ADD_TO_CART: {
+      let newProducts = {...cartState.products, [action.addedProduct]: 1}
+      return {
+        ...cartState,
+        loading: false,
+        errorMsg: null,
+        products: newProducts,
+        empty: false,
+      }
+    }
+
+    case CART_ACTIONS.CART_REDUCE_QTY: {
+      const { addedProduct } = action;
+      const currentQty = cartState.products[addedProduct];
+      const newQty = currentQty - 1;
+      let newProducts = null;
+      let emptyState = false
+      if (newQty == 0){
+        const { [addedProduct]: _, ...restProducts } = cartState.products;
+        newProducts = restProducts;
+        if (newProducts === null){
+          newProducts = {}
+          emptyState = true
+        }
+      } else {
+        newProducts = {...cartState.products, [action.addedProduct]: newQty}
+      }
+      return {
+        ...cartState,
+        loading: false,
+        errorMsg: null,
+        products: newProducts,
+        empty: emptyState,
+      }
+    }
+
+    case CART_ACTIONS.CART_ADD_QTY: {
+      const { addedProduct } = action;
+      const currentQty = cartState.products[addedProduct];
+      const newQty = currentQty + 1;
+      let newProducts = {...cartState.products, [action.addedProduct]: newQty}
+      return {
+        ...cartState,
+        loading: false,
+        errorMsg: null,
+        products: newProducts,
+        empty: false,
+      }
+    }
+
+    default: {
+      throw Error('Unknown action: ' + action.type)
+    }
+
+    
+  }}
+
+
+ const CartContext = createContext(CART_ARGS)
+ const CartDispatchContext = createContext(null)
+
+
+ export function useCart() {
+  return useContext(CartContext);
+}
+
+ export function useCartDispatch() {
+  return useContext(CartDispatchContext);
+}
 
 
 export function AppProvider({ children }){
@@ -168,6 +260,11 @@ export function AppProvider({ children }){
     CATEGORIES_ARGS
   )
 
+  const [cartState, cartDispatch] = useReducer(
+    cartReducer,
+    CART_ARGS
+  )
+
   
 
 
@@ -178,7 +275,13 @@ export function AppProvider({ children }){
         <SearchContext.Provider value={searchState}>
           <SearchDispatchContext.Provider value={dispatch}>
 
-            {children}
+            <CartContext.Provider value={cartState}>
+              <CartDispatchContext.Provider value={cartDispatch}>
+
+              {children}
+
+            </CartDispatchContext.Provider> 
+              </CartContext.Provider>
 
           </SearchDispatchContext.Provider>
         </SearchContext.Provider>

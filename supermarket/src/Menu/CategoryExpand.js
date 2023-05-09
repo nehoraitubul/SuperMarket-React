@@ -29,7 +29,7 @@ export function CategoryExpand({category}) {
 
 
           <ThemeProvider theme={theme}>
-          <NavLink to={`products/${subCategory.name.split(' ').join('-')}/`} key={subCategory.id} state={{data: {"sc3_id":subCategory.id}}}
+          <NavLink key={subCategory.id} to={`products/${subCategory.name.split(' ').join('-')}/`} state={{data: {"sc3_id":subCategory.id}}}
             style={{ fontSize: '25px' ,color: 'inherit', textDecoration: 'inherit'}} 
             className='nav-link'>
             <Typography color={'red'} fontSize='1rem' mt={1}>{subCategory.name}</Typography>
@@ -39,10 +39,10 @@ export function CategoryExpand({category}) {
           <div style={{ display: "flex" , flexDirection: 'column'}}>
             {subCategory.sub_sub_sub_categories.map(subSubCategory => (
 
-              <div key={subSubCategory.id} style={{ display: "inline-block", marginRight: "10px" }}>
+              <div style={{ display: "inline-block", marginRight: "10px" }}>
 
-                <NavLink to={`products/${subSubCategory.name.split(' ').join('-')}/`} 
-                  state={{data: {"sc4_id":subSubCategory.id}}} key={subSubCategory.id}
+                <NavLink key={subSubCategory.id} to={`products/${subSubCategory.name.split(' ').join('-')}/`} 
+                  state={{data: {"sc4_id":subSubCategory.id}}}
                   color='textPrimary' style={{ fontSize: '15px' ,color: 'inherit', textDecoration: 'inherit'}} className='nav-link'>
                 
                 <Typography color={'white'}>{subSubCategory.name}</Typography>
