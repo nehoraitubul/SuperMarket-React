@@ -111,12 +111,20 @@ export function Layout(){
             
         </Box>
 
+        <Box display="flex" flexDirection="row" alignItems="flex-start">
+
+            <p>MY CART</p>
+        
         
         <div dir='rtl'>
-
+     
+        {/* ALL PRODUCTS */}
         <Outlet />
 
+
         </div>
+
+        </Box>
 
         </>
     )

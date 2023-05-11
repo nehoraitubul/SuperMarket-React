@@ -1,15 +1,17 @@
 import axios from "axios"
 import { useEffect, useState } from 'react';
-import { useLocation, Link } from 'react-router-dom'
+import { useLocation, Link, useParams } from 'react-router-dom'
 import { SEARCH_CATEGORIES } from '../URLS';
 import { Box, Button, Card, CardActions, CardContent, CardMedia, Grid, Typography } from "@mui/material";
-import image from '../images-all/10181040009.jpg'
 import { BuyButton } from "./BuyButton";
 import styled from "@emotion/styled";
 
 
 
 export function ProductCard() {
+
+    const urlParams = useParams()
+
     const [page, setPage] = useState(1);
     const [products, setProducts] = useState([]);
 
@@ -27,7 +29,7 @@ export function ProductCard() {
         const response = await axios.get(SEARCH_CATEGORIES, {params})
         if(response.status === 200){
             const allCategories = response.data
-            console.log('allCategories ', allCategories.results);
+            // console.log('allCategories ', allCategories.results);
             setProducts(allCategories.results)
         }
     };
@@ -35,7 +37,7 @@ export function ProductCard() {
 
     useEffect(() => {
         getCategories()
-    }, []);
+    }, [urlParams]);
 
     // console.log('products state: ', products.length);
 
@@ -55,19 +57,34 @@ export function ProductCard() {
         }
     `);
 
+     {products.length > 0 &&
+        products.map((product) => {console.log(product)} )}
+
+
+    const [hovered, setHovered] = useState(false);
+
+    const handleHover = () => {
+        setHovered(true);
+    };
+    
+    const handleMouseLeave = () => {
+        setHovered(false);
+    };
+
 
     return (
         <>
-        <Box sx={{ml:'300px', mr: '150px'}}>
+        <Box sx={{ mr: '150px'}}>
         <Grid container direction="row" alignItems="flex-start" justifyContent="flex-end">
         {products.length > 0 &&
             products.map((product) => 
                 
-                <Card key={product.name} 
+                <Card key={product.catalog_number} 
                 sx={{ minWidth: 250, maxWidth: 450, maxHeight: 450, ml: '20px', mb: '10px', 
                 position: 'relative', transition: "box-shadow 0.3s",
                 "&:hover": {boxShadow: "0px 0px 15px 0px rgba(0,0,0,0.4)", cursor: "pointer", "& button": {display: "block"}}, 
-                "& button": {display: "none", width: "100%"}}}>
+                "& button": {display: "none", width: "100%"}}} 
+                onMouseEnter={handleHover} onMouseLeave={handleMouseLeave}>
                     <Link to='/' style={{ color: 'inherit', textDecoration: 'none'}} >
                     <CardMedia
                         component="img"
@@ -102,10 +119,10 @@ export function ProductCard() {
                     </CardContentNoPadding>
                     </Link>
 
-                    <CardContent sx = {{display: "flex", p: '0px'}}>
+                    <CardContent sx={{display: "flex", p: '0px'}}>
                         <CardActions>
                             <Box sx={{position: 'absolute', bottom: '5px', left: '5px', right: '5px'}}>
-                                <BuyButton product_cat_id={product.catalog_number} key={product.name}/>
+                                <BuyButton hovered={hovered} product_cat_id={product.catalog_number} key={product.catalog_number}/>
                             </Box>
                         </CardActions>
                         

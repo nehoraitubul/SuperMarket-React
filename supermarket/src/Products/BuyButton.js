@@ -1,7 +1,8 @@
-import { Button } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import './BuyButton.css'
 import { useState } from "react";
 import { CART_ACTIONS, useCart, useCartDispatch } from '../AppContext';
+import { QuantityButtons } from "./QuantityButtons";
 
 
 
@@ -10,8 +11,8 @@ export function BuyButton(props) {
     const cartState = useCart()
     const dispatch = useCartDispatch()
 
-    console.log('this is the current cart products: ', cartState);
-    console.log('cartState.products[props.product_cat_id]', cartState.products[props.product_cat_id]);
+    // console.log('this is the current cart products: ', cartState);
+    // console.log('cartState.products[props.product_cat_id]', cartState.products[props.product_cat_id]);
 
     const [quantity, setQuantity] = useState(false)
 
@@ -32,7 +33,9 @@ export function BuyButton(props) {
             BUY
         </Button>
         :
-        <Button>CLICKED</Button>
+        <Box display={"flex"} flexDirection={"row"} >
+            <QuantityButtons product_cat_id={props.product_cat_id} hovered={props.hovered} />
+        </Box>
         }
         </>
     )
