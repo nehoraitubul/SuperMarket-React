@@ -43,10 +43,19 @@ export function ProductCard() {
 
     const size_dic = {
         'g': 'גרם',
-        'units': 'יחידה',
+        'units': "יח'",
         'ml': 'מ"ל',
         'kg': "קילו",
         'l': 'ליטר',
+        'm': 'מטר'
+    }
+
+    const size_cart = {
+        'g': "יח'",
+        'units': "יח'",
+        'ml': "יח'",
+        'kg': "קילו",
+        'l': "יח'",
         'm': 'מטר'
     }
 
@@ -57,8 +66,8 @@ export function ProductCard() {
         }
     `);
 
-     {products.length > 0 &&
-        products.map((product) => {console.log(product)} )}
+    //  {products.length > 0 &&
+    //     products.map((product) => {console.log(product)} )}
 
 
     const [hovered, setHovered] = useState(false);
@@ -122,7 +131,9 @@ export function ProductCard() {
                     <CardContent sx={{display: "flex", p: '0px'}}>
                         <CardActions>
                             <Box sx={{position: 'absolute', bottom: '5px', left: '5px', right: '5px'}}>
-                                <BuyButton hovered={hovered} product_cat_id={product.catalog_number} key={product.catalog_number}/>
+                                <BuyButton hovered={hovered} product_img={product.image} product_name={product.name}
+                                            product_cat_id={product.catalog_number} key={product.catalog_number}
+                                            product_unit={size_cart[product.units]}/>
                             </Box>
                         </CardActions>
                         

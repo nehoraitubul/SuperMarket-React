@@ -19,7 +19,10 @@ export function BuyButton(props) {
     const handleClick = () => {
         dispatch({
             type: CART_ACTIONS.CART_ADD_TO_CART,
-            addedProduct: props.product_cat_id
+            addedProduct: props.product_cat_id,
+            productImg: props.product_img,
+            productName: props.product_name,
+            productUnit: props.product_unit,
         })
     }
 

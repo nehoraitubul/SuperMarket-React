@@ -8,6 +8,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { CategoryBar } from './Menu/CategoryBar';
 import { CATEGORIES } from "./URLS"
 import { CATEGORIES_ACTIONS, useCategories, useCategoriesDispatch } from "./AppContext";
+import { Cart } from "./Cart/Cart";
 
 export function Layout(){
 
@@ -113,8 +114,7 @@ export function Layout(){
 
         <Box display="flex" flexDirection="row" alignItems="flex-start">
 
-            <p>MY CART</p>
-        
+            <Cart />
         
         <div dir='rtl'>
      

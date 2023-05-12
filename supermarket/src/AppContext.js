@@ -178,7 +178,8 @@ function cartReducer(cartState, action) {
   switch(action.type) {
 
     case CART_ACTIONS.CART_ADD_TO_CART: {
-      let newProducts = {...cartState.products, [action.addedProduct]: 1}
+      let newProducts = {...cartState.products, [action.addedProduct]: 
+        {'quantity': 1, 'img': action.productImg, 'name': action.productName, 'unit':action.productUnit } }
       return {
         ...cartState,
         loading: false,
@@ -190,7 +191,7 @@ function cartReducer(cartState, action) {
 
     case CART_ACTIONS.CART_REDUCE_QTY: {
       const { addedProduct } = action;
-      const currentQty = cartState.products[addedProduct];
+      const currentQty = cartState.products[addedProduct]["quantity"];
       const newQty = currentQty - 1;
       let newProducts = null;
       let emptyState = false
@@ -202,7 +203,7 @@ function cartReducer(cartState, action) {
           emptyState = true
         }
       } else {
-        newProducts = {...cartState.products, [action.addedProduct]: newQty}
+        newProducts = {...cartState.products, [action.addedProduct]: {...cartState.products[action.addedProduct], 'quantity': newQty}}
       }
       return {
         ...cartState,
@@ -215,9 +216,9 @@ function cartReducer(cartState, action) {
 
     case CART_ACTIONS.CART_ADD_QTY: {
       const { addedProduct } = action;
-      const currentQty = cartState.products[addedProduct];
+      const currentQty = cartState.products[addedProduct]["quantity"];
       const newQty = currentQty + 1;
-      let newProducts = {...cartState.products, [action.addedProduct]: newQty}
+      let newProducts = {...cartState.products, [action.addedProduct]: {...cartState.products[action.addedProduct], 'quantity': newQty}}
       return {
         ...cartState,
         loading: false,

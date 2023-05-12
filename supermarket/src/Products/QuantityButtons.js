@@ -9,9 +9,9 @@ export function QuantityButtons(props) {
     const cartState = useCart()
     const dispatch = useCartDispatch()
 
-    console.log('QuantityButtons', props.product_cat_id);
+    // console.log('QuantityButtons', props.product_cat_id);
 
-    console.log(cartState.products);
+    // console.log('df',cartState.products[props.product_cat_id]);
 
     const [quantity, setQuantity] = useState(1)
 
@@ -43,7 +43,7 @@ export function QuantityButtons(props) {
                     onClick={handleAddClick} >+</Button>
             
             <Button disabled>
-            <TextField id="standard-basic" variant="standard" value={quantity}
+            <TextField id="standard-basic" variant="standard" value={cartState.products[props.product_cat_id]['quantity']}
                 sx={{input: {textAlign: "center"}, maxWidth: '40px', textAlign: 'center'}} />
             </Button>
 
@@ -57,7 +57,7 @@ export function QuantityButtons(props) {
         {props.hovered == false &&
             <Chip   sx={{minWidth: '80px'}}
                     avatar={<Avatar alt="Natacha" src={cartImg} />}
-                    label={<Typography fontWeight={'bold'}>{quantity}</Typography>}/>
+                    label={<Typography fontWeight={'bold'}>{cartState.products[props.product_cat_id]['quantity']}</Typography>}/>
         }
         </>
     )
