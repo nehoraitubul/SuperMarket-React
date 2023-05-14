@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import { AppProvider } from './AppContext';
 import { Layout } from './Layout';
 import { ProductCard } from './Products/ProductCard';
+import { LoginPage } from './LoginRegister/LoginPage';
 
 function App() {
   return (
@@ -14,6 +15,9 @@ function App() {
               <Route path="products/:category/" element={<ProductCard />} />
 
             </Route>
+
+            <Route path="login/" element={<LoginPage />} />
+
           </Routes>
       </AppProvider>
   );

@@ -42,10 +42,10 @@ export function QuantityButtons(props) {
                     "&:hover":{ backgroundColor: '#66bb6a'}}}
                     onClick={handleAddClick} >+</Button>
             
-            <Button disabled>
-            <TextField id="standard-basic" variant="standard" value={cartState.products[props.product_cat_id]['quantity']}
+            {/* <Button disabled> changed ID */}
+            <TextField id={props.product_cat_id} variant="standard" value={cartState.products[props.product_cat_id]['quantity']}
                 sx={{input: {textAlign: "center"}, maxWidth: '40px', textAlign: 'center'}} />
-            </Button>
+            {/* </Button> */}
 
             <Button sx={{maxWidth: '85px', color: '#fff', backgroundColor: '#4caf50', transition: "background-color 0.3s",
                     "&:hover":{ backgroundColor: '#66bb6a'}}}

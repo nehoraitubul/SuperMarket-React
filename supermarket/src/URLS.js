@@ -8,3 +8,5 @@ export const REFRESH = `${HOSTNAME}/auth/token/refresh`
 export const CATEGORIES = `${HOSTNAME}/categories/`
 
 export const SEARCH_CATEGORIES = `${HOSTNAME}/search/category`
+
+export const PRODUCT_DETAILS = `${HOSTNAME}/product/`

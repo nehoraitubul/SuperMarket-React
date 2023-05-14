@@ -2,9 +2,10 @@ import axios from "axios"
 import { useEffect, useState } from 'react';
 import { useLocation, Link, useParams } from 'react-router-dom'
 import { SEARCH_CATEGORIES } from '../URLS';
-import { Box, Button, Card, CardActions, CardContent, CardMedia, Grid, Typography } from "@mui/material";
+import { Backdrop, Box, Button, Card, CardActions, CardContent, CardMedia, Fade, Grid, Modal, Typography } from "@mui/material";
 import { BuyButton } from "./BuyButton";
 import styled from "@emotion/styled";
+import { ProductModal } from "../ProductModal/ProductModal";
 
 
 
@@ -80,10 +81,18 @@ export function ProductCard() {
         setHovered(false);
     };
 
+    const [open, setOpen] = useState(false);
+
+    const handleClick = () => {
+        setOpen(!open);
+        console.log(open);
+    }
+
+
 
     return (
         <>
-        <Box sx={{ mr: '150px'}}>
+        <Box sx={{ mr: '150px', ml: '350px'}}>  {/*  ml: '350px'  */}
         <Grid container direction="row" alignItems="flex-start" justifyContent="flex-end">
         {products.length > 0 &&
             products.map((product) => 
@@ -94,7 +103,8 @@ export function ProductCard() {
                 "&:hover": {boxShadow: "0px 0px 15px 0px rgba(0,0,0,0.4)", cursor: "pointer", "& button": {display: "block"}}, 
                 "& button": {display: "none", width: "100%"}}} 
                 onMouseEnter={handleHover} onMouseLeave={handleMouseLeave}>
-                    <Link to='/' style={{ color: 'inherit', textDecoration: 'none'}} >
+                    {/* <Link to='/' style={{ color: 'inherit', textDecoration: 'none'}} > */}
+                    <div onClick={handleClick}>
                     <CardMedia
                         component="img"
                         width= '190px' height= '190px' 
@@ -126,7 +136,8 @@ export function ProductCard() {
                         </Box>
 
                     </CardContentNoPadding>
-                    </Link>
+                    </div>
+                    {/* </Link> */}
 
                     <CardContent sx={{display: "flex", p: '0px'}}>
                         <CardActions>
@@ -138,6 +149,8 @@ export function ProductCard() {
                         </CardActions>
                         
                     </CardContent>
+                    
+
 
                 </Card>
                 
@@ -146,6 +159,21 @@ export function ProductCard() {
         }
         </Grid>
         </Box>
+        {open == true &&
+                     <Modal
+                        aria-labelledby="transition-modal-title"
+                        aria-describedby="transition-modal-description"
+                        open={open}
+                        onClose={handleClick}
+                        closeAfterTransition
+                        slots={{ backdrop: Backdrop }}
+                        slotProps={{
+                        backdrop: {
+                        timeout: 500,
+                     },
+                     }}>
+                        <ProductModal/>
+                    </Modal>}
         </>
     )
 }

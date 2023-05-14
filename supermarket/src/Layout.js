@@ -113,8 +113,10 @@ export function Layout(){
         </Box>
 
         <Box display="flex" flexDirection="row" alignItems="flex-start">
-
-            <Cart />
+            
+            <Box style={{position: 'fixed'}}>
+                <Cart />
+            </Box>
         
         <div dir='rtl'>
      
