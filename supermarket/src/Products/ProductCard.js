@@ -73,18 +73,20 @@ export function ProductCard() {
 
     const [hovered, setHovered] = useState(false);
 
-    const handleHover = () => {
-        setHovered(true);
-    };
+    const handleHover = (productCatalogNumber) => {
+        setHovered(productCatalogNumber);
+      };
     
-    const handleMouseLeave = () => {
-        setHovered(false);
-    };
+      const handleMouseLeave = () => {
+        setHovered(null);
+      };
 
     const [open, setOpen] = useState(false);
+    const [curr_product, setCurr_product] = useState('');
 
-    const handleClick = () => {
+    const handleClick = (catalog_num) => {
         setOpen(!open);
+        setCurr_product(catalog_num)
         console.log(open);
     }
 
@@ -102,9 +104,9 @@ export function ProductCard() {
                 position: 'relative', transition: "box-shadow 0.3s",
                 "&:hover": {boxShadow: "0px 0px 15px 0px rgba(0,0,0,0.4)", cursor: "pointer", "& button": {display: "block"}}, 
                 "& button": {display: "none", width: "100%"}}} 
-                onMouseEnter={handleHover} onMouseLeave={handleMouseLeave}>
+                onMouseEnter={() => handleHover(product.catalog_number)} onMouseLeave={handleMouseLeave}>
                     {/* <Link to='/' style={{ color: 'inherit', textDecoration: 'none'}} > */}
-                    <div onClick={handleClick}>
+                    <div onClick={() => handleClick(product.catalog_number)}>
                     <CardMedia
                         component="img"
                         width= '190px' height= '190px' 
@@ -142,7 +144,7 @@ export function ProductCard() {
                     <CardContent sx={{display: "flex", p: '0px'}}>
                         <CardActions>
                             <Box sx={{position: 'absolute', bottom: '5px', left: '5px', right: '5px'}}>
-                                <BuyButton hovered={hovered} product_img={product.image} product_name={product.name}
+                                <BuyButton hovered={hovered === product.catalog_number} product_img={product.image} product_name={product.name}
                                             product_cat_id={product.catalog_number} key={product.catalog_number}
                                             product_unit={size_cart[product.units]}/>
                             </Box>
@@ -158,7 +160,6 @@ export function ProductCard() {
             // {product.unit_of_measure} {size_dic[product.units]}
         }
         </Grid>
-        </Box>
         {open == true &&
                      <Modal
                         aria-labelledby="transition-modal-title"
@@ -172,8 +173,10 @@ export function ProductCard() {
                         timeout: 500,
                      },
                      }}>
-                        <ProductModal/>
+                        <ProductModal catalog_number={curr_product}/>
                     </Modal>}
+        </Box>
+       
         </>
     )
 }
