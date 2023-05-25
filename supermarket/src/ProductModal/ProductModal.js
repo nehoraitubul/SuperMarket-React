@@ -4,6 +4,8 @@ import { PRODUCT_DETAILS } from "../URLS"
 import axios from "axios"
 import { ModalBuyButton } from "./ModalBuyButton";
 import { CART_ACTIONS, useCart, useCartDispatch } from '../AppContext';
+import { NutritionalValues } from "./NutritionalValues";
+
 
 
 const theme = createTheme({
@@ -18,7 +20,7 @@ const theme = createTheme({
     },
   });
 
-const styles = (theme) => ({
+const styles= {
     position: 'absolute', 
     top: '50%', left: '50%',
     transform: 'translate(-50%, -50%)',
@@ -29,8 +31,11 @@ const styles = (theme) => ({
     flexDirection: 'column',
     minWidth: '60%', 
     minHeight: '80%',
-
-})
+    overflow:'scroll',
+    height:'80%',
+    pl: '42px',
+    pb: '42px',
+}
 
 
 const ButtonStyle = {
@@ -102,7 +107,7 @@ export function ProductModal(props){
         <div>
             {data &&
                
-                <Box sx={styles} dir='rtl'>
+                <Box sx={{...styles}} dir='rtl' className="container">
 
                     <Grid container spacing={2} justifyContent="space-between" sx={{pb: 2}}> 
 
@@ -151,9 +156,7 @@ export function ProductModal(props){
 
                 <Grid container spacing={2} justifyContent="space-between">
 
-                <Box>
-
-                </Box>
+                <NutritionalValues data={data.product_info_id}/>
 
                 </Grid>
                     
