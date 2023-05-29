@@ -31,7 +31,7 @@ const styles= {
     flexDirection: 'column',
     minWidth: '60%', 
     minHeight: '80%',
-    overflow:'scroll',
+    overflow:'auto',
     height:'80%',
     pl: '42px',
     pb: '42px',
