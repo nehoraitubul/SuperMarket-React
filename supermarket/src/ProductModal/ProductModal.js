@@ -118,7 +118,7 @@ export function ProductModal(props){
                             </Box>
                         </Grid>
 
-                        <Grid container lg={7} sm={12} sx={{pr: 3, }} justifyContent="space-around" flexDirection={'column'}>
+                        <Grid container item lg={7} sm={12} sx={{pr: 3, }} justifyContent="space-around" flexDirection={'column'}>
                             
                             {/* top */}
                             <Grid>

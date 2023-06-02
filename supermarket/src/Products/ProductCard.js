@@ -133,7 +133,7 @@ export function ProductCard() {
                         </Typography>
 
                         <Typography variant="button">
-                            ₪{product.unit_of_measure_price} / {product.unit_of_measure} {size_dic[product.units]}
+                            ₪{product.more_info.unit_of_measure_price} / {product.more_info.unit_of_measure} {size_dic[product.more_info.units]}
                         </Typography>
                         </Box>
 
