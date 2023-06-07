@@ -5,6 +5,7 @@ import axios from "axios"
 import { ModalBuyButton } from "./ModalBuyButton";
 import { CART_ACTIONS, useCart, useCartDispatch } from '../AppContext';
 import { NutritionalValues } from "./NutritionalValues";
+import { PropetiesKosher } from "./PropetiesKosher";
 
 
 
@@ -40,9 +41,9 @@ const styles= {
 
 const ButtonStyle = {
     width: '20%', 
-    backgroundColor: '#fafafa',
+    backgroundColor: '#eaeaea',
     color: 'black',
-    fontSize: '15px',
+    fontSize: '18px',
     fontWeight: 'bold',
     '&:hover': {
         backgroundColor: '#fafafa',
@@ -78,6 +79,19 @@ export function ProductModal(props){
         'kg': "קילו",
         'l': "יח'",
         'm': 'מטר'
+    }
+
+    const [nutritionalButton, setNutritionalButton] = useState(true);
+    const [propetieslButton, setPropetieslButton] = useState(false);
+
+    const handleNutritionalButtonClick  = () => {
+        setNutritionalButton(true)
+        setPropetieslButton(false)
+    }
+
+    const handlePropetiesButtonClick  = () => {
+        setNutritionalButton(false)
+        setPropetieslButton(true)
     }
 
 
@@ -148,15 +162,29 @@ export function ProductModal(props){
 
                 
 
-                <Button disableRipple sx={ButtonStyle}>
+                <Button disableRipple sx={ButtonStyle} onClick={handleNutritionalButtonClick}>
                     רכיבים ואלרגניים        
+                </Button>
+
+                <Button disableRipple sx={{...ButtonStyle, mr: '10px'}} onClick={handlePropetiesButtonClick}>
+                פרטים וכשרות
                 </Button>
 
                 <Divider sx={{color: '#fafafa'}}/>
 
                 <Grid container spacing={2} justifyContent="space-between">
 
-                <NutritionalValues data={data.product_info_id}/>
+                {nutritionalButton &&
+                    <NutritionalValues data={data.product_info_id}/>
+                }
+
+                {propetieslButton &&
+                    <>
+                    <PropetiesKosher data={data.product_info_id}/>
+                    </>
+                }
+ 
+                
 
                 </Grid>
                     
