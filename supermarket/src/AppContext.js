@@ -171,6 +171,7 @@ export const CART_ACTIONS = {
   CART_ADD_TO_CART: "cartAddToCart",
   CART_REDUCE_QTY: "cartReduceQty",
   CART_ADD_QTY: "cartAddQty",
+  CART_DELETE_ALL: "catfDeleteAll"
 }
 
 
@@ -179,7 +180,7 @@ function cartReducer(cartState, action) {
 
     case CART_ACTIONS.CART_ADD_TO_CART: {
       let newProducts = {...cartState.products, [action.addedProduct]: 
-        {'quantity': 1, 'img': action.productImg, 'name': action.productName, 'unit':action.productUnit } }
+        {'quantity': 1, 'img': action.productImg, 'name': action.productName, 'unit':action.productUnit, 'price':action.productPrice } }
       return {
         ...cartState,
         loading: false,
@@ -227,6 +228,16 @@ function cartReducer(cartState, action) {
         empty: false,
       }
     }
+
+    case CART_ACTIONS.CART_DELETE_ALL: {
+      return {
+        products: {},
+        loading: false,
+        errorMsg: null,
+        empty: true,
+      }
+    }
+
 
     default: {
       throw Error('Unknown action: ' + action.type)

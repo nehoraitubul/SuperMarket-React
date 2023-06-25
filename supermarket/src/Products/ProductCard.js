@@ -15,6 +15,7 @@ export function ProductCard() {
 
     const [page, setPage] = useState(1);
     const [products, setProducts] = useState([]);
+    // const [pervProducts, setPervProducts] = useState([]);
 
     const location = useLocation()
     const {data}  = location.state
@@ -31,14 +32,37 @@ export function ProductCard() {
         if(response.status === 200){
             const allCategories = response.data
             // console.log('allCategories ', allCategories.results);
+            // setProducts((prevProducts) => [...prevProducts, ...allCategories.results]);\
             setProducts(allCategories.results)
         }
     };
 
 
     useEffect(() => {
+        setProducts([])
+        setPage(1)
         getCategories()
     }, [urlParams]);
+
+    // const loadMoreProducts = () => {
+    //     setPage((prevPage) => prevPage + 1);
+    // };
+
+
+    // useEffect(() => {
+    // const handleScroll = () => {
+    //     const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
+    //     if (scrollTop + clientHeight >= scrollHeight - 20) { // Adjust the threshold value as needed
+    //         loadMoreProducts();
+    //     }
+    // };
+
+    // window.addEventListener('scroll', handleScroll);
+
+    // return () => {
+    //     window.removeEventListener('scroll', handleScroll);
+    // };
+    // }, []);
 
     // console.log('products state: ', products.length);
 
@@ -99,8 +123,8 @@ export function ProductCard() {
         {products.length > 0 &&
             products.map((product) => 
                 
-                <Card key={product.catalog_number} 
-                sx={{ minWidth: 250, maxWidth: 450, maxHeight: 450, ml: '20px', mb: '10px', 
+                <Card key={product.catalog_number}
+                sx={{ width: 250, height: 420, ml: '20px', mb: '10px', 
                 position: 'relative', transition: "box-shadow 0.3s",
                 "&:hover": {boxShadow: "0px 0px 15px 0px rgba(0,0,0,0.4)", cursor: "pointer", "& button": {display: "block"}}, 
                 "& button": {display: "none", width: "100%"}}} 
@@ -146,7 +170,7 @@ export function ProductCard() {
                             <Box sx={{position: 'absolute', bottom: '5px', left: '5px', right: '5px'}}>
                                 <BuyButton hovered={hovered === product.catalog_number} product_img={product.image} product_name={product.name}
                                             product_cat_id={product.catalog_number} key={product.catalog_number}
-                                            product_unit={size_cart[product.units]}/>
+                                            product_unit={size_cart[product.units]} product_price={product.more_info.price_info}/>
                             </Box>
                         </CardActions>
                         

@@ -22,6 +22,7 @@ export function ModalBuyButton(props) {
             productImg: props.product_img,
             productName: props.product_name,
             productUnit: props.product_unit,
+            productPrice: props.product_price,
         })
     }
 

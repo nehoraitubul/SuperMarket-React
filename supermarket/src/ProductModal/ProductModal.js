@@ -151,7 +151,7 @@ export function ProductModal(props){
                                 <div style={{paddingTop: '35px', width: '80%'}}>
                                 <ModalBuyButton curr_quantity={cartState.products[data.catalog_number]}
                                                 product_unit={size_cart[data.units]} product_cat_id={data.catalog_number}
-                                                product_img={data.image} product_name={data.name}
+                                                product_img={data.image} product_name={data.name} product_price={data.price.price}
                                 />    
                                 </div>
                             </Grid>
