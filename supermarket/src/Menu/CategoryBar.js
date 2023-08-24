@@ -44,7 +44,7 @@ export function CategoryBar() {
       </div>}
       TransitionComponent={Fade}
         TransitionProps={{ timeout: 400 }}>
-          <NavLink key={category.category.id} to={`products/${category.category.name.split(' ').join('-')}/`} 
+          <NavLink key={category.category.id} to={`products/${category.category.name.split(' ').join('-')}/?sc=${'sc2_id'}&category_id=${category.category.id}`} 
                   state={{data: {"sc2_id":category.category.id}}}
                   color='textPrimary' style={{  textDecoration: 'inherit'}} className='nav-link'>
           <Button

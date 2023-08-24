@@ -1,7 +1,7 @@
 import axios from "axios"
 import { useEffect, useState } from 'react';
 import { useLocation, Link, useParams } from 'react-router-dom'
-import { SEARCH_CATEGORIES } from '../URLS';
+import { MAIN_PAGE_PRODUCTS, SEARCH_CATEGORIES } from '../URLS';
 import { Backdrop, Box, Button, Card, CardActions, CardContent, CardMedia, Fade, Grid, Modal, Typography } from "@mui/material";
 import { BuyButton } from "./BuyButton";
 import styled from "@emotion/styled";
@@ -18,9 +18,14 @@ export function ProductCard() {
     // const [pervProducts, setPervProducts] = useState([]);
 
     const location = useLocation()
-    const {data}  = location.state
-    const category_type = Object.keys(data)[0]
-    const category_id = Object.values(data)[0]
+    const queryParams = new URLSearchParams(location.search);
+    const category_type = queryParams.get('sc');
+    const category_id = queryParams.get('category_id');
+    // console.log('category_id = ', category_id);
+    // console.log('category_type = ', category_type);
+    // const {data}  = location.state || {}
+    // const category_type = data ? Object.keys(data)[0] : '';
+    // const category_id = data ? Object.values(data)[0] : '';
 
     const params = {
         'page': page,
@@ -28,12 +33,17 @@ export function ProductCard() {
     }
 
     const getCategories = async () => {
+        const isMainPage = location.pathname === '/';
+        if (!isMainPage) {
+        // console.log("getCategories axios");
+        // console.log('location: ', location.state);
         const response = await axios.get(SEARCH_CATEGORIES, {params})
         if(response.status === 200){
             const allCategories = response.data
-            // console.log('allCategories ', allCategories.results);
+            // console.log('allCategories getCategories axios ', allCategories);
             // setProducts((prevProducts) => [...prevProducts, ...allCategories.results]);\
             setProducts(allCategories.results)
+        }
         }
     };
 
@@ -43,6 +53,32 @@ export function ProductCard() {
         setPage(1)
         getCategories()
     }, [urlParams]);
+
+
+    useEffect(() => {
+        // Check if the current URL is the main page (e.g., '/')
+        const isMainPage = location.pathname === '/';
+        // console.log("inside location.pathname");
+    
+        if (isMainPage) {
+          // Fetch different products for the main page
+          const fetchMainProducts = async () => {
+            const response = await axios.get(MAIN_PAGE_PRODUCTS);
+            if (response.status === 200) {
+              const mainPageProducts = response.data;
+            //   console.log('mainPageProducts ', mainPageProducts);
+              setProducts([]);
+              setProducts(mainPageProducts);
+            }
+          };
+    
+          fetchMainProducts();
+        }
+      }, []);
+
+
+    
+
 
     // const loadMoreProducts = () => {
     //     setPage((prevPage) => prevPage + 1);

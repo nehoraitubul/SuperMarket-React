@@ -35,6 +35,7 @@ function App() {
 
               <Route path='/' element={<Layout />}>
                 
+                <Route path="/" element={<ProductCard />} />
                 <Route path="products/:category/" element={<ProductCard />} />
 
               </Route>

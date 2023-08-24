@@ -31,16 +31,16 @@ export function Cart() {
 
 
     const buttonStyle = {
-        minHeight: '61px',
-              minWidth: '150px',
-              backgroundColor: '#eee',
-              borderRadius: '30px',
-              color: '#777',
-              fontWeight: 'bold',
-              mb: 2,
-              '&:hover': {
-                backgroundColor: '#fff',
-              },
+            minHeight: '70px',
+            minWidth: '150px',
+            backgroundColor: '#4d734e',
+            // borderRadius: '30px',
+            color: 'white',
+            fontWeight: 'bold',
+            fontSize: "20px",
+            '&:hover': {
+            backgroundColor: '#6db36f',
+            },
     }
 
 
@@ -53,7 +53,7 @@ export function Cart() {
             subheader={
                 <ListSubheader id="nested-list-subheader" sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <Typography fontSize={'25px'} fontWeight={'bold'}>הסל שלי</Typography>
-                        <IconButton onClick={handleTrashClick}>
+                        <IconButton onClick={handleTrashClick} disabled={cartState.empty}>
                             <DeleteForeverRoundedIcon />
                         </IconButton>
                 </ListSubheader>
@@ -84,8 +84,9 @@ export function Cart() {
                 <Box>
                     <CartProduct />
 
-                    <Box sx={{ position: "fixed", backgroundColor: 'white', bottom: 0, width: "100%", }}>
-                        <Button sx={{...buttonStyle, my: 1, mr: 1}} variant="contained" color="primary">Buy</Button>
+                    <Box sx={{ position: "fixed", backgroundColor: '#4caf50', bottom: 0, width: "100%", display: "flex", alignItems: "center", gap: 4}}>
+                        <Button sx={{...buttonStyle, }} variant="contained" color="primary">לתשלום</Button>
+                        <Typography fontSize={'20px'} fontWeight={'bold'} variant="subtitle1" color="white"> ₪105.89</Typography>
                     </Box>
                 </Box>
                 

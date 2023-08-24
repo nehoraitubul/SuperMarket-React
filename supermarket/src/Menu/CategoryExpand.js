@@ -19,7 +19,7 @@ export function CategoryExpand({category}) {
         <Grid item xs={category.sub_sub_categories.length === 1 ? 12 : category.sub_sub_categories.length <= 4 ? 6 : 4}>
         <Box key={subCategory.id} dir="rtl" sx={{backgroundColor: "white", ml: 1, borderRadius: '10px'}}>
           
-          <NavLink onClick={(e) => e.currentTarget.blur()} key={subCategory.id} to={`products/${subCategory.name.split(' ').join('-')}/`} state={{data: {"sc3_id":subCategory.id}}}
+          <NavLink onClick={(e) => e.currentTarget.blur()} key={subCategory.id} to={`products/${subCategory.name.split(' ').join('-')}/?sc=${'sc3_id'}&category_id=${subCategory.id}`} state={{data: {"sc3_id":subCategory.id}}}
             style={{ fontSize: '25px' ,color: 'inherit', textDecoration: 'inherit'}} 
             className='nav-link'>
             <Typography fontWeight={'bold'} fontSize='1rem' mt={1} sx={{mr: "10px", color: "#333333"}}>{subCategory.name}</Typography>
@@ -31,7 +31,7 @@ export function CategoryExpand({category}) {
 
               <div key={subSubCategory.id} style={{ display: "inline-block", marginRight: "10px" }}>
 
-                <NavLink onClick={(e) => e.currentTarget.blur()} key={subSubCategory.id} to={`products/${subSubCategory.name.split(' ').join('-')}/`} 
+                <NavLink onClick={(e) => e.currentTarget.blur()} key={subSubCategory.id} to={`products/${subSubCategory.name.split(' ').join('-')}/?sc=${'sc4_id'}&category_id=${subSubCategory.id}`} 
                   state={{data: {"sc4_id":subSubCategory.id}}}
                   style={{
                     display: 'inline-block',

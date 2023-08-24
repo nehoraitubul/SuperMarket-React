@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer } from "react"
+import { createContext, useContext, useEffect, useReducer } from "react"
 
 // SEARCH
 
@@ -171,7 +171,8 @@ export const CART_ACTIONS = {
   CART_ADD_TO_CART: "cartAddToCart",
   CART_REDUCE_QTY: "cartReduceQty",
   CART_ADD_QTY: "cartAddQty",
-  CART_DELETE_ALL: "catfDeleteAll"
+  CART_DELETE_ALL: "catfDeleteAll",
+  CART_UPDATE: "cartUpdate",
 }
 
 
@@ -179,9 +180,13 @@ function cartReducer(cartState, action) {
   switch(action.type) {
 
     case CART_ACTIONS.CART_ADD_TO_CART: {
+      console.log(cartState.products);
       let newProducts = {...cartState.products, [action.addedProduct]: 
         {'quantity': 1, 'img': action.productImg, 'name': action.productName, 'unit':action.productUnit, 'price':action.productPrice } }
-      return {
+      
+        updateLocalStorage(newProducts);
+      
+        return {
         ...cartState,
         loading: false,
         errorMsg: null,
@@ -199,13 +204,19 @@ function cartReducer(cartState, action) {
       if (newQty == 0){
         const { [addedProduct]: _, ...restProducts } = cartState.products;
         newProducts = restProducts;
-        if (newProducts === null){
+        console.log("restProducts: ", restProducts)
+        if (Object.keys(newProducts).length === 0){
           newProducts = {}
           emptyState = true
         }
       } else {
         newProducts = {...cartState.products, [action.addedProduct]: {...cartState.products[action.addedProduct], 'quantity': newQty}}
       }
+      console.log("newProducts: ", newProducts)
+      console.log("cart state after reduce: ", cartState.empty)
+      
+      updateLocalStorage(newProducts);
+      
       return {
         ...cartState,
         loading: false,
@@ -220,6 +231,9 @@ function cartReducer(cartState, action) {
       const currentQty = cartState.products[addedProduct]["quantity"];
       const newQty = currentQty + 1;
       let newProducts = {...cartState.products, [action.addedProduct]: {...cartState.products[action.addedProduct], 'quantity': newQty}}
+      
+      updateLocalStorage(newProducts);
+
       return {
         ...cartState,
         loading: false,
@@ -230,12 +244,27 @@ function cartReducer(cartState, action) {
     }
 
     case CART_ACTIONS.CART_DELETE_ALL: {
+
+      updateLocalStorage({});
+
       return {
         products: {},
         loading: false,
         errorMsg: null,
         empty: true,
       }
+    }
+
+    case CART_ACTIONS.CART_UPDATE: {
+      const { updatedProducts } = action;
+    
+      return {
+        ...cartState,
+        loading: false,
+        errorMsg: null,
+        products: updatedProducts,
+        empty: Object.keys(updatedProducts).length === 0,
+      };
     }
 
 
@@ -245,6 +274,12 @@ function cartReducer(cartState, action) {
 
     
   }}
+
+
+  function updateLocalStorage(products) {
+    localStorage.setItem("cart", JSON.stringify(products));
+  }
+
 
 
  const CartContext = createContext(CART_ARGS)
@@ -276,6 +311,17 @@ export function AppProvider({ children }){
     cartReducer,
     CART_ARGS
   )
+
+  useEffect(() => {
+    const storedCartData = localStorage.getItem("cart");
+  
+    if (storedCartData) {
+      const parsedCartData = JSON.parse(storedCartData);
+  
+      cartDispatch({ type: CART_ACTIONS.CART_UPDATE, updatedProducts: parsedCartData });
+    }
+  }, []);
+
 
   
 

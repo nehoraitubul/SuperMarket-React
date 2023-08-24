@@ -1,14 +1,15 @@
 import axios from "axios"
 import "./Layout.css"
 import { AppBar, Toolbar, Box, Container, Fab, Badge, Stack, useTheme, useMediaQuery } from '@mui/material';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { SearchDropDown } from './Menu/SearchDropDown';
-import { Link, Outlet } from 'react-router-dom';
+import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { CategoryBar } from './Menu/CategoryBar';
-import { CATEGORIES } from "./URLS"
+import { CATEGORIES, MAIN_PAGE_PRODUCTS, ME } from "./URLS"
 import { CATEGORIES_ACTIONS, useCategories, useCategoriesDispatch } from "./AppContext";
 import { Cart } from "./Cart/Cart";
+import Cookies from 'js-cookie';
 
 export function Layout(){
 
@@ -16,9 +17,16 @@ export function Layout(){
     const onlyBiglScreen = useMediaQuery(theme.breakpoints.up("lg"));
     const onlyMediumSmallScreen = useMediaQuery(theme.breakpoints.down("lg"));
 
+    const [isLogIn, setIsLogIn] = useState(false);
+    const [name, setName] = useState("g");
+
 
     const categoriesState = useCategories()
     const dispatch = useCategoriesDispatch()
+
+    const location = useLocation();
+
+    const isMainPage = location.pathname === '/';
 
 
     const getCategories = async () => {
@@ -26,7 +34,7 @@ export function Layout(){
         const response = await axios.get(CATEGORIES)
         if(response.status === 200){
             const allCategories = response.data
-            console.log("allCategories", allCategories);
+            // console.log("allCategories", allCategories);
             dispatch({
 				type: CATEGORIES_ACTIONS.CATEGORIES_FETCH_SUCCESS,
 				dataRecieved: allCategories
@@ -36,9 +44,50 @@ export function Layout(){
         }
     };
 
+    const checkLogIn = async () => {
+        if(Cookies.get('accsses') !== 'undefined'){
+            const token = Cookies.get('access');
+            console.log(token);
+            const config = {
+                headers: {Authorization: `Bearer ${token}`},
+            };
+            try {
+                const response = await axios.get(`${ME}`, config)
+                if(response.status === 200){
+                    setIsLogIn(true)
+                    setName(`${response.data['first_name']} ${response.data['last_name']}`)
+                    console.log(`${response.data['first_name']} ${response.data['last_name']}`);
+                } 
+            } catch (error) {
+                if (error.response && error.response.status === 401) {
+                    console.log(error, "NOT TRUE!");
+                }
+            };
+        }
+
+    }
+
     useEffect(() => {
         getCategories()
+        checkLogIn()
     }, []);
+
+
+
+    // const getMainProducts = async () => {
+        
+    //     const response = await axios.get(MAIN_PAGE_PRODUCTS)
+    //     if(response.status === 200){
+    //         const allProducts = response.data
+    //         console.log("allMainRandomProducts", allProducts);
+    //     } else {
+    //         console.log("allMainRandomProducts", "error");
+    //     }
+    // };
+
+    // useEffect(() => {  
+    //     getMainProducts()
+    // }, []);
 
 
   
@@ -47,8 +96,8 @@ export function Layout(){
         <>
         <Box> 
             <Box style={{ position: 'sticky', top: 0, zIndex: 1 }}>
-            {categoriesState.categories!==null &&
-            console.log("Categories:", categoriesState.categories[2])}
+            {/* {categoriesState.categories!==null &&
+            console.log("Categories:", categoriesState.categories[2])} */}
             <AppBar position="static" sx={{ backgroundColor: '#f3f3f3', color: '#555', pt: '9px', pb: '9px'}} elevation={0}>
                 <Container maxWidth="lg" >
                     <Toolbar disableGutters>
@@ -67,12 +116,20 @@ export function Layout(){
                             <SearchDropDown />
                         </Box>
 
-                        <Box sx={{ display: { xs: 'none', md: 'flex' }}}>
-                            <Link color='textPrimary' style={{ color: 'inherit', textDecoration: 'inherit'}} href=""> היתחבר/הירשם </Link>
-                        </Box>
-                        <Box sx={{ display: { xs: 'flex', md: 'none' }}}>
-                            <Link color='textPrimary' style={{ color: 'inherit', textDecoration: 'inherit'}} href=""> היתחבר/הירשם </Link>
-                        </Box>
+                        {isLogIn == false ?
+                            <>
+                            <Box sx={{ display: { xs: 'none', md: 'flex' }}}>
+                                <NavLink color='textPrimary' style={{ color: 'inherit', textDecoration: 'inherit'}} to="login/"> היתחבר/הירשם </NavLink>
+                            </Box>
+                            <Box sx={{ display: { xs: 'flex', md: 'none' }}}>
+                                <NavLink color='textPrimary' style={{ color: 'inherit', textDecoration: 'inherit'}} to="login/"> היתחבר/הירשם </NavLink>
+                            </Box>
+                            </>
+                            :
+                            <Box sx={{ display: { xs: 'none', md: 'flex' }}} dir="rtl">
+                                <NavLink color='textPrimary' style={{ color: 'inherit', textDecoration: 'inherit'}} to="login/"> שלום {name} </NavLink>
+                            </Box>
+                        }
 
                     </Toolbar>
                 </Container>
