@@ -31,7 +31,7 @@ export function QuantityButtons(props) {
         })
     }
 
-
+    if(!props.isMobile){
     return (
         <>
         
@@ -66,4 +66,56 @@ export function QuantityButtons(props) {
 
         </>
     )
+    }
+
+    if(props.isMobile){
+    return (
+        <>
+            {props.isMobile ? (
+                <Box
+                    alignItems="center"
+                    justifyContent="space-between"
+                    maxHeight={'40px'}
+                    display={"flex"}
+                    flexDirection={"row"}
+                    sx={{ width: '100%' }}
+                >
+                    <Button
+                        sx={{
+                            maxWidth: '85px',
+                            color: '#fff',
+                            backgroundColor: '#4caf50',
+                            transition: "background-color 0.3s",
+                            "&:hover": { backgroundColor: '#66bb6a' }
+                        }}
+                        onClick={handleAddClick}
+                    >
+                        +
+                    </Button>
+                    <Button disabled>
+                        <TextField
+                            id={props.product_cat_id}
+                            variant="standard"
+                            value={cartState.products[props.product_cat_id]['quantity']}
+                            sx={{ input: { textAlign: "center" }, maxWidth: '40px', textAlign: 'center' }}
+                        />
+                    </Button>
+                    <Button
+                        sx={{
+                            maxWidth: '85px',
+                            color: '#fff',
+                            backgroundColor: '#4caf50',
+                            transition: "background-color 0.3s",
+                            "&:hover": { backgroundColor: '#66bb6a' }
+                        }}
+                        onClick={handleDeacClick}
+                    >
+                        -
+                    </Button>
+                </Box>
+            ) : null}
+        </>
+    )
+    }
+    
 }

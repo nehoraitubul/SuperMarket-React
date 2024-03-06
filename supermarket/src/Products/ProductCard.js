@@ -2,7 +2,7 @@ import axios from "axios"
 import { useEffect, useState } from 'react';
 import { useLocation, Link, useParams } from 'react-router-dom'
 import { MAIN_PAGE_PRODUCTS, SEARCH_CATEGORIES } from '../URLS';
-import { Backdrop, Box, Button, Card, CardActions, CardContent, CardMedia, Fade, Grid, Modal, Typography } from "@mui/material";
+import { Backdrop, Box, Button, Card, createTheme, useMediaQuery, CardActions, CardContent, CardMedia, Fade, Grid, Modal, Typography } from "@mui/material";
 import { BuyButton } from "./BuyButton";
 import styled from "@emotion/styled";
 import { ProductModal } from "../ProductModal/ProductModal";
@@ -10,6 +10,15 @@ import { ProductModal } from "../ProductModal/ProductModal";
 
 
 export function ProductCard() {
+
+    const theme = createTheme({
+        breakpoints: {
+            values: {
+                lg: 1024,
+            },
+        },
+    });
+    const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
 
     const urlParams = useParams()
 
@@ -151,10 +160,14 @@ export function ProductCard() {
     }
 
 
-
+    if(!isMobile){
     return (
         <>
-        <Box sx={{ mr: '150px', ml: '350px'}}>  {/*  ml: '350px'  */}
+        <Box sx={{ 
+            mr: '150px', 
+            ml: '350px',
+            mt: '20px'
+        }}>
         <Grid container direction="row" alignItems="flex-start" justifyContent="flex-end">
         {products.length > 0 &&
             products.map((product) => 
@@ -238,5 +251,72 @@ export function ProductCard() {
         </Box>
        
         </>
+    
     )
+    }
+
+
+    if(isMobile){
+    return (
+        <>
+        <Box sx={{ 
+            mr: 0, 
+            ml: 0,
+            mt: '20px'
+        }}>
+        <Grid container direction="row" alignItems="flex-start" justifyContent="flex-end">
+        {products.length > 0 &&
+            products.map((product) => 
+                <Card key={product.catalog_number}
+                    sx={{ width: 250, height: 420, ml: '20px', mb: '10px', 
+                    position: 'relative', transition: "box-shadow 0.3s",
+                    "&:hover": {boxShadow: "0px 0px 15px 0px rgba(0,0,0,0.4)", cursor: "pointer"} }}>
+                    <div onClick={() => handleClick(product.catalog_number)}>
+                    <CardMedia
+                        component="img"
+                        width= '190px' height= '190px' 
+                        image={product.image}
+                        sx={{ objectFit: "contain", backgroundColor: '#fafafa'}}
+                    />
+                    <CardContentNoPadding>
+                        <Box sx={{display: 'flex', flexDirection: 'column'}}>
+                            <Typography variant="button">
+                                {product.quantity} {size_dic[product.units]}
+                            </Typography>
+                            <Typography fontWeight="bold" variant="subtitle2">
+                                {product.name}
+                            </Typography>
+                            <Typography variant="button" sx = {{ pb: '25px'}}>
+                                {product.more_info.manu_info.name}
+                            </Typography>
+                            <Typography fontWeight="bold" variant="h6">
+                                ₪{product.more_info.price_info}
+                            </Typography>
+                            <Typography variant="button">
+                                ₪{product.more_info.unit_of_measure_price} / {product.more_info.unit_of_measure} {size_dic[product.more_info.units]}
+                            </Typography>
+                        </Box>
+                    </CardContentNoPadding>
+                    </div>
+                    <CardContent sx={{display: "flex", p: '0px'}}>
+                        <CardActions>
+                            <Box sx={{position: 'absolute', bottom: '5px', left: '5px', right: '5px'}}>
+                                <BuyButton 
+                                    product_img={product.image} 
+                                    product_name={product.name}
+                                    product_cat_id={product.catalog_number} 
+                                    product_unit={size_cart[product.units]} 
+                                    product_price={product.more_info.price_info}
+                                    isMobile={isMobile}
+                                />
+                            </Box>
+                        </CardActions>
+                    </CardContent>
+                </Card>
+            )}
+        </Grid>
+        </Box>
+        </>
+    )
+        }
 }

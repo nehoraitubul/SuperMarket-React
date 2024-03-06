@@ -1,6 +1,6 @@
 import { Alert, AlertTitle, Box, Button, Grid, IconButton, InputAdornment, Link, TextField, Typography } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import backgroundImage from "./loginbackground.png";
 import { LOGIN } from "../URLS"
 import axios from "axios";
@@ -75,6 +75,20 @@ export function LoginPage() {
             [name]: value,
         }));
     };
+
+    useEffect(() => {
+        const handleGlobalMouseUp = () => {
+          setShowPassword(false);
+        };
+    
+        if (showPassword) {
+          window.addEventListener("mouseup", handleGlobalMouseUp);
+        }
+    
+        return () => {
+          window.removeEventListener("mouseup", handleGlobalMouseUp);
+        };
+      }, [showPassword]);
 
     const containerStyle = {
         backgroundImage: `url(${backgroundImage})`,
@@ -188,10 +202,15 @@ export function LoginPage() {
                     name="password"
                     value={formData.password}
                     onChange={handleInputChange}
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          handleLoginOrRegister();
+                        }
+                    }}
                     InputProps={{
                         endAdornment: (
                             <InputAdornment>
-                                <IconButton onClick={handleTogglePasswordVisibility}>
+                                <IconButton onMouseDown={handleTogglePasswordVisibility} onMouseUp={handleTogglePasswordVisibility}>
                                     {showPassword ? <VisibilityOff /> : <Visibility />}
                                 </IconButton>
                             </InputAdornment>

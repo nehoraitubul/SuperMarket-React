@@ -6,7 +6,7 @@ import { SearchCategories } from './SearchCategories';
 import { SEARCH_ACTIONS, useSearch, useSearchDispatch } from '../AppContext';
 
 
-export function SearchDropDown() {
+export function SearchDropDown({ isMobile }) {
 
     const searchState = useSearch()
     const dispatch = useSearchDispatch()
@@ -43,11 +43,10 @@ export function SearchDropDown() {
 
 
   return (
-    <div style={{
-      backgroundColor: '#ffffff',
-    }}>
+    <div style={{backgroundColor: '#ffffff',}}>
         {/* Desktop Preview */}
-        <Box sx={{ display: { xs: 'none', md: 'inline-flex'}}}>
+        { !isMobile &&
+        <Box sx={{ display: 'flex'}}>
         <IconButton type="button" sx={{ p: '10px', }} aria-label="search">
             <SearchIcon />
         </IconButton>
@@ -84,16 +83,19 @@ export function SearchDropDown() {
         </Menu>
 
         </Box>
+}
         {/* Phone Preview */}
-        <Box sx={{ display: { xs: 'inline-flex', md: 'none'}}}>
+        { isMobile &&
+        <Box sx={{ display: "flex"}}>
         <IconButton type="button" sx={{ p: '10px', }} aria-label="search">
             <SearchIcon />
         </IconButton>
-        <InputBase sx={{ ml: 6, flex: 1, pr: "10px"}} 
+        <InputBase sx={{ ml: 6, flex: 1, pr: "10px", width: 300}} 
             dir='rtl' type='search'
             placeholder='חיפוש פריט..'
         />
         </Box>
+}
 
     </div>
   );

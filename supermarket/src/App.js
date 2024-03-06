@@ -5,6 +5,7 @@ import { Layout } from './Layout';
 import { ProductCard } from './Products/ProductCard';
 import { LoginPage } from './LoginRegister/LoginPage';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { CheckoutPage } from './CheckOut/CheckoutPage';
 
 
 function App() {
@@ -41,6 +42,8 @@ function App() {
               </Route>
 
               <Route path="login/" element={<LoginPage />} />
+
+              <Route path="checkout/" element={<CheckoutPage />} />
 
             </Routes>
         </AppProvider>

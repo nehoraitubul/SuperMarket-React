@@ -43,3 +43,36 @@ export function ModalBuyButton(props) {
         </>
     )
 }
+
+
+{/* <>
+{!isMobile && (
+<>
+{cartState.products[props.product_cat_id] == undefined ?
+<Button className="buy-button" fullWidth={true}
+sx={{color: '#fff', backgroundColor: '#4caf50', transition: "background-color 0.3s",
+"&:hover":{ backgroundColor: '#66bb6a'}}} onClick={handleClick}>
+    הוספה לעגלה
+</Button>
+:
+<Box display={"flex"} flexDirection={"row"} >
+    <ModalQtyButtons product_cat_id={props.product_cat_id}/>
+</Box>
+}
+</>
+)}
+{isMobile && (
+<>
+{cartState.products[props.product_cat_id] == undefined ?
+<Button className="buy-button" fullWidth={true}
+sx={{color: '#fff', backgroundColor: '#4caf50', transition: "background-color 0.3s", }} onClick={handleClick}>
+    הוספה לעגלה
+</Button>
+:
+<Box display={"flex"} flexDirection={"row"} >
+    <ModalQtyButtons product_cat_id={props.product_cat_id}/>
+</Box>
+}
+</>
+)}
+</> */}

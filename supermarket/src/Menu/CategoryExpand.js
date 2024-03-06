@@ -1,16 +1,22 @@
-import { Box, Button, Fade, Grid, Popper, Typography, createMuiTheme } from "@mui/material";
-import { useEffect } from "react";
+import { Box, Button, Fade, Grid, IconButton, Popper, Slide, Typography, createMuiTheme } from "@mui/material";
+import { useEffect, useState } from "react";
 import { useCategories } from "../AppContext";
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { createTheme, ThemeProvider } from '@mui/material';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 
 
 
+export function CategoryExpand({category, isMobile, closeSliders}) {
 
-export function CategoryExpand({category}) {
+  const [selectedSubCategory, setSelectedSubCategory] = useState(null);
 
-    
+  const handleSubCategoryClick = (subCategoryId) => {
+    setSelectedSubCategory(selectedSubCategory === subCategoryId ? null : subCategoryId);
+  };
+
+    if(!isMobile){
     return (
       <>
       <Grid container dir={"rtl"} direction="row" alignItems="flex-start" justifyContent="flex-start">
@@ -69,4 +75,81 @@ export function CategoryExpand({category}) {
 
     </>
     );
+                
+  }
+
+
+  if(isMobile){
+    return (
+      <>
+      <Grid container direction="column" alignItems="flex-start" justifyContent="flex-start">
+      {category.sub_sub_categories.map((subCategory) => (
+        <Grid item key={subCategory.id} xs={1}>
+          {!selectedSubCategory && (
+          <Box sx={{ 
+            backgroundColor: "white", 
+            borderRadius: '10px', 
+            mb: 1,
+            width: "1000px",
+            minHeight: "70px",
+          }}>
+          <NavLink
+            onClick={() => handleSubCategoryClick(subCategory.id)}
+            to={`products/${subCategory.name.split(' ').join('-')}/?sc=${'sc3_id'}&category_id=${subCategory.id}`}
+            style={{ textDecoration: 'inherit', color: '#777', minWidth: '100%' }}
+            className='nav-link'
+          >
+              <Typography fontWeight={'bold'} fontSize='1rem' sx={{mr: "10px", color: "#777" }}>{subCategory.name}</Typography>
+            </NavLink>
+            </Box>
+            )} 
+            {selectedSubCategory === subCategory.id && (
+            <Slide direction="left" in={selectedSubCategory === subCategory.id} mountOnEnter unmountOnExit>
+
+            <Box sx={{ position: 'fixed', top: "81px", right: 0, width: '100%', height: '100%', }}>
+            <IconButton onClick={() => { setSelectedSubCategory(null) }} sx={{ marginTop: "10px" }}>
+              <ArrowForwardIcon />
+            </IconButton>
+              {subCategory.sub_sub_sub_categories.map(subSubCategory => (
+                <NavLink
+                  key={subSubCategory.id}
+                  to={`products/${subSubCategory.name.split(' ').join('-')}/?sc=${'sc4_id'}&category_id=${subSubCategory.id}`}
+                  style={{textDecoration: 'none', }}
+                  className='nav-link'
+                  onClick={{closeSliders}}
+                >
+                  <Typography sx={{
+                    backgroundColor: "white", 
+                    borderRadius: '10px', 
+                    mb: 1,
+                    minWidth: 0,
+                    fontSize: "1rem",
+                    minHeight: "70px",
+                    flex: "1",
+                    color: "#777",
+                    fontWeight: "bold",
+                    justifyContent: "flex-start",
+                    mr: "10px",
+                    mt: 1}}
+                  >
+                    {subSubCategory.name}
+                  </Typography>
+                </NavLink>
+              ))}
+            </Box>
+            </Slide>
+            )}
+          
+           
+        </Grid>
+      ))}
+    </Grid>
+
+    </>
+    );
+                
+}
+
+
+
 }

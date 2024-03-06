@@ -38,7 +38,7 @@ export function BuyButton(props) {
         </Button>
         :
         <Box display={"flex"} flexDirection={"row"} >
-            <QuantityButtons product_cat_id={props.product_cat_id} hovered={props.hovered} />
+            <QuantityButtons product_cat_id={props.product_cat_id} hovered={props.hovered} isMobile={props.isMobile}/>
         </Box>
         }
         </>

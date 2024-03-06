@@ -165,6 +165,7 @@ export function useCategoriesDispatch() {
   loading: false,
   errorMsg: null,
   empty: true,
+  totalPrice: 0,
 }
 
 export const CART_ACTIONS = {
@@ -173,6 +174,7 @@ export const CART_ACTIONS = {
   CART_ADD_QTY: "cartAddQty",
   CART_DELETE_ALL: "catfDeleteAll",
   CART_UPDATE: "cartUpdate",
+  CART_DELETE_PRODUCT: "cartDeleteProduct",
 }
 
 
@@ -185,6 +187,8 @@ function cartReducer(cartState, action) {
         {'quantity': 1, 'img': action.productImg, 'name': action.productName, 'unit':action.productUnit, 'price':action.productPrice } }
       
         updateLocalStorage(newProducts);
+
+        const totalPrice = calculateTotalPrice(newProducts);
       
         return {
         ...cartState,
@@ -192,6 +196,7 @@ function cartReducer(cartState, action) {
         errorMsg: null,
         products: newProducts,
         empty: false,
+        totalPrice: totalPrice,
       }
     }
 
@@ -216,6 +221,8 @@ function cartReducer(cartState, action) {
       console.log("cart state after reduce: ", cartState.empty)
       
       updateLocalStorage(newProducts);
+
+      const totalPrice = calculateTotalPrice(newProducts);
       
       return {
         ...cartState,
@@ -223,6 +230,7 @@ function cartReducer(cartState, action) {
         errorMsg: null,
         products: newProducts,
         empty: emptyState,
+        totalPrice: totalPrice,
       }
     }
 
@@ -234,12 +242,15 @@ function cartReducer(cartState, action) {
       
       updateLocalStorage(newProducts);
 
+      const totalPrice = calculateTotalPrice(newProducts);
+
       return {
         ...cartState,
         loading: false,
         errorMsg: null,
         products: newProducts,
         empty: false,
+        totalPrice: totalPrice,
       }
     }
 
@@ -247,16 +258,21 @@ function cartReducer(cartState, action) {
 
       updateLocalStorage({});
 
+      const totalPrice = 0;
+
       return {
         products: {},
         loading: false,
         errorMsg: null,
         empty: true,
+        totalPrice: totalPrice,
       }
     }
 
     case CART_ACTIONS.CART_UPDATE: {
       const { updatedProducts } = action;
+
+      const totalPrice = calculateTotalPrice(updatedProducts);
     
       return {
         ...cartState,
@@ -264,6 +280,25 @@ function cartReducer(cartState, action) {
         errorMsg: null,
         products: updatedProducts,
         empty: Object.keys(updatedProducts).length === 0,
+        totalPrice: totalPrice,
+      };
+    }
+
+    case CART_ACTIONS.CART_DELETE_PRODUCT: {
+      const { productId } = action;
+      const { [productId]: deletedProduct, ...remainingProducts } = cartState.products;
+      
+      updateLocalStorage(remainingProducts);
+      
+      const totalPrice = calculateTotalPrice(remainingProducts);
+    
+      return {
+        ...cartState,
+        loading: false,
+        errorMsg: null,
+        products: remainingProducts,
+        empty: Object.keys(remainingProducts).length === 0,
+        totalPrice: totalPrice,
       };
     }
 
@@ -274,6 +309,17 @@ function cartReducer(cartState, action) {
 
     
   }}
+
+
+  // Function to calculate total price
+  function calculateTotalPrice(products) {
+    let totalPrice = 0;
+    for (const product of Object.values(products)) {
+      totalPrice += product.quantity * product.price;
+    }
+    return totalPrice.toFixed(2);
+  }
+    
 
 
   function updateLocalStorage(products) {
