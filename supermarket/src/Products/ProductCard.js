@@ -2,7 +2,7 @@ import axios from "axios"
 import { useEffect, useState } from 'react';
 import { useLocation, Link, useParams } from 'react-router-dom'
 import { MAIN_PAGE_PRODUCTS, SEARCH_CATEGORIES } from '../URLS';
-import { Backdrop, Box, Button, Card, createTheme, useMediaQuery, CardActions, CardContent, CardMedia, Fade, Grid, Modal, Typography } from "@mui/material";
+import { Backdrop, Box, Button, Card, createTheme, useMediaQuery, CardActions, CardContent, CardMedia, Fade, Grid, Modal, Typography, Paper } from "@mui/material";
 import { BuyButton } from "./BuyButton";
 import styled from "@emotion/styled";
 import { ProductModal } from "../ProductModal/ProductModal";
@@ -136,7 +136,7 @@ export function ProductCard() {
         }
     `);
 
-    //  {products.length > 0 &&
+    // {products.length > 0 &&
     //     products.map((product) => {console.log(product)} )}
 
 
@@ -159,21 +159,41 @@ export function ProductCard() {
         console.log(open);
     }
 
+    let newPrice = null;
+    const promoDetails = (p) => {
+        if (p.promo_details && p.promo_details.length > 0 && p.promo_details[0].reward_type === 10) {
+            newPrice = p.promo_details[0].discounted_price;
+            let minQty = p.promo_details[0].min_qty.split('.')[0];
+            let q;
+            let boldNewPrice
+            if (p.promo_details[0].max_qty !== null) {
+                let maxQty = p.promo_details[0].max_qty.split('.')[0];
+                q = 'קנה ' + minQty + ' יחידות, מוגבל עד ' + maxQty + 'יחידות';
+            } else {
+                boldNewPrice = <Typography fontWeight="bold">{newPrice}</Typography>;
+                console.log(boldNewPrice);
+                q = `קנה ${minQty} יחידות ב-`;
+            }
+            return q;
+        }
+        return null;
+    }
+
 
     if(!isMobile){
     return (
         <>
         <Box sx={{ 
-            mr: '150px', 
-            ml: '350px',
-            mt: '20px'
+            mr: '20px', 
+            ml: '370px',
+            mt: '20px',
         }}>
-        <Grid container direction="row" alignItems="flex-start" justifyContent="flex-end">
+        <Grid container direction="row" alignItems="flex-start" justifyContent="flex-end" sx={{gap: '20px', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))' }}>
         {products.length > 0 &&
             products.map((product) => 
                 
                 <Card key={product.catalog_number}
-                sx={{ width: 250, height: 420, ml: '20px', mb: '10px', 
+                sx={{ width: '100%', height: '500px', ml: '20px', mb: '10px', 
                 position: 'relative', transition: "box-shadow 0.3s",
                 "&:hover": {boxShadow: "0px 0px 15px 0px rgba(0,0,0,0.4)", cursor: "pointer", "& button": {display: "block"}}, 
                 "& button": {display: "none", width: "100%"}}} 
@@ -186,6 +206,8 @@ export function ProductCard() {
                         image={product.image}
                         sx={{ objectFit: "contain", backgroundColor: '#fafafa'}}
                     />
+
+                    {/* {console.log(product)} */}
                     
                     <CardContentNoPadding>
                         <Box sx={{display: 'flex', flexDirection: 'column'}}>
@@ -209,6 +231,26 @@ export function ProductCard() {
                             ₪{product.more_info.unit_of_measure_price} / {product.more_info.unit_of_measure} {size_dic[product.more_info.units]}
                         </Typography>
                         </Box>
+
+                        {product.promo_details.length > 0 && (
+                                <Paper elevation={3} sx={{bgcolor: '#C8E6C9', ml: '10px', mr: '10px', mt: '10px', pr: '4px' }}>
+
+                                    <Typography variant="subtitle1" fontWeight="bold">
+                                        2 בהנחה |  בתוקף עד 25/03/24
+                                    </Typography>
+
+                                    <Typography variant="body1">
+                                        {promoDetails(product)}
+                                        {' '}
+                                        {newPrice !== null && (
+                                            <Typography variant="body1" component="span" fontWeight="bold">
+                                                {newPrice}
+                                            </Typography>
+                                        )}
+                                    </Typography>
+                                    
+                                </Paper>
+                        )}
 
                     </CardContentNoPadding>
                     </div>
@@ -264,11 +306,11 @@ export function ProductCard() {
             ml: 0,
             mt: '20px'
         }}>
-        <Grid container direction="row" alignItems="flex-start" justifyContent="flex-end">
+        <Grid container direction="row" alignItems="flex-start" justifyContent="flex-end" sx={{gap: '20px', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))' }}>
         {products.length > 0 &&
             products.map((product) => 
                 <Card key={product.catalog_number}
-                    sx={{ width: 250, height: 420, ml: '20px', mb: '10px', 
+                    sx={{ width: '100%', height: 420, ml: '20px', mb: '10px', 
                     position: 'relative', transition: "box-shadow 0.3s",
                     "&:hover": {boxShadow: "0px 0px 15px 0px rgba(0,0,0,0.4)", cursor: "pointer"} }}>
                     <div onClick={() => handleClick(product.catalog_number)}>
