@@ -1,5 +1,5 @@
-const HOSTNAME = 'http://localhost:8000/api'
-// const HOSTNAME = 'http://ec2-44-211-201-85.compute-1.amazonaws.com/api'
+// const HOSTNAME = 'http://localhost:8000/api'
+const HOSTNAME = 'http://ec2-13-48-123-33.eu-north-1.compute.amazonaws.com:8000/api'
 
 export const ME = `${HOSTNAME}/auth/me`
 
